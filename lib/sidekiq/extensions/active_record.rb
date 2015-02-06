@@ -22,12 +22,27 @@ module Sidekiq
 
     module ActiveRecord
       def sidekiq_delay(options={})
+        $sidekiq_deprecated_delay ||= begin
+          Sidekiq.logger.warn "Delaying an instance method will be removed in Sidekiq 4.0, see [link]"
+          Sidekiq.logger.warn caller[0]
+          1
+        end
         Proxy.new(DelayedModel, self, options)
       end
       def sidekiq_delay_for(interval, options={})
+        $sidekiq_deprecated_delay ||= begin
+          Sidekiq.logger.warn "Delaying an instance method will be removed in Sidekiq 4.0, see [link]"
+          Sidekiq.logger.warn caller[0]
+          1
+        end
         Proxy.new(DelayedModel, self, options.merge('at' => Time.now.to_f + interval.to_f))
       end
       def sidekiq_delay_until(timestamp, options={})
+        $sidekiq_deprecated_delay ||= begin
+          Sidekiq.logger.warn "Delaying an instance method will be removed in Sidekiq 4.0, see [link]"
+          Sidekiq.logger.warn caller[0]
+          1
+        end
         Proxy.new(DelayedModel, self, options.merge('at' => timestamp.to_f))
       end
       alias_method :delay, :sidekiq_delay
